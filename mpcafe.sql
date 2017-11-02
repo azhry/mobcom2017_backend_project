@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2017 at 12:45 PM
+-- Generation Time: Nov 02, 2017 at 01:03 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -30,6 +30,7 @@ CREATE TABLE `musics` (
   `musics_id` int(11) NOT NULL,
   `title` varchar(150) NOT NULL,
   `artist` varchar(150) NOT NULL,
+  `album` varchar(150) NOT NULL,
   `genre` varchar(30) NOT NULL,
   `filename` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,9 +61,11 @@ CREATE TABLE `request_queue` (
 
 CREATE TABLE `votes` (
   `vote_id` int(11) NOT NULL,
-  `musics_id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
   `type` enum('1','0') NOT NULL DEFAULT '1',
-  `device_id` varchar(64) NOT NULL
+  `device_id` varchar(64) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -87,7 +90,7 @@ ALTER TABLE `request_queue`
 --
 ALTER TABLE `votes`
   ADD PRIMARY KEY (`vote_id`),
-  ADD KEY `musics_id` (`musics_id`);
+  ADD KEY `request_id` (`request_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -122,7 +125,7 @@ ALTER TABLE `request_queue`
 -- Constraints for table `votes`
 --
 ALTER TABLE `votes`
-  ADD CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`musics_id`) REFERENCES `musics` (`musics_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`request_id`) REFERENCES `request_queue` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
