@@ -48,7 +48,7 @@ class Request extends MY_Controller
 			else
 			{
 				$this->response['error']			= true;
-				$this->response['error_message']	= 'Music not found';
+				$this->response['error_message']	= "$musics_id is the given music id. Music not found";
 			}
 		}
 		else
