@@ -8,6 +8,8 @@ class Musics extends MY_Controller
 	{
 		parent::__construct();
 		$this->response['error'] = false;
+		$this->response['error_message'] = '';
+		$this->response['data'] = [];
 		$this->load->model('musics_m');
 	}
 
