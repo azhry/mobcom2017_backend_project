@@ -9,6 +9,8 @@ class Votes extends MY_Controller
 		parent::__construct();
 		$this->load->model('votes_m');
 		$this->response['error'] = false;
+		$this->response['error_message'] = '';
+		$this->response['data'] = [];
 	}
 
 	public function set_votes()
