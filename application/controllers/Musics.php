@@ -60,22 +60,22 @@ class Musics extends MY_Controller
 		{
 			if (count($fields) > 0)
 			{
-				$this->response['data'] = $this->musics_m->select_row(['*'], $fields);
+				$this->response['data'] = $this->musics_m->get_music($fields);
 			}
 			else
 			{
-				$this->response['data'] = $this->musics_m->select_row();
+				$this->response['data'] = $this->musics_m->get_music();
 			}
 		}
 		else
 		{
 			if (count($fields) > 0)
 			{
-				$this->response['data'] = $this->musics_m->select(['*'], $fields);
+				$this->response['data'] = $this->musics_m->get_all_musics($fields);
 			}
 			else
 			{
-				$this->response['data'] = $this->musics_m->select();
+				$this->response['data'] = $this->musics_m->get_all_musics();
 			}
 		}
 
