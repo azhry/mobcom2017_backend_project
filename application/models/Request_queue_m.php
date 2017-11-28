@@ -1,5 +1,7 @@
 <?php 
 
+require_once APPPATH . '/third_party/getID3-1.9.15/getid3/getid3.php';
+
 class Request_queue_m extends MY_Model 
 {
 	public function __construct()
@@ -19,7 +21,29 @@ class Request_queue_m extends MY_Model
 		$this->db->join('musics', $this->data['table_name'] . '.musics_id = musics.musics_id');
 		$this->db->order_by($this->data['table_name'] . '.created_at', 'DESC');
 		$query = $this->db->get();
-		return $query->result();
+		
+		$ID3 = new getID3();
+
+		$result = [];
+		$musics = $query->result();
+
+		foreach ($musics as $music)
+		{
+			$path 		= FCPATH . 'assets/musics/' . $music->filename;
+			$file_info 	= $ID3->analyze($path);
+			if (isset($file_info['comments']['picture'][0]))
+			{
+				$music->base64img = base64_encode($file_info['comments']['picture'][0]['data']);
+			}
+			else
+			{
+				$music->base64img = null;
+			}
+
+			$result []= $music;
+		}
+
+		return $result;
 	}
 
 	public function get_request($cond = '')
@@ -32,6 +56,24 @@ class Request_queue_m extends MY_Model
 		$this->db->join('musics', $this->data['table_name'] . '.musics_id = musics.musics_id');
 		$this->db->order_by($this->data['table_name'] . '.created_at', 'DESC');
 		$query = $this->db->get();
-		return $query->row();
+
+		$ID3 = new getID3();
+		$music = $query->row();
+
+		if (isset($music))
+		{
+			$path 		= FCPATH . 'assets/musics/' . $music->filename;
+			$file_info 	= $ID3->analyze($path);
+			if (isset($file_info['comments']['picture'][0]))
+			{
+				$music->base64img = base64_encode($file_info['comments']['picture'][0]['data']);
+			}
+			else
+			{
+				$music->base64img = null;
+			}
+		}
+
+		return $music;
 	}
 }
