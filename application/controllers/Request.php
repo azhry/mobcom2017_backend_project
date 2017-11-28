@@ -73,22 +73,22 @@ class Request extends MY_Controller
 		{
 			if (count($fields) > 0)
 			{
-				$this->response['data'] = $this->request_queue_m->select_row(['*'], $fields);
+				$this->response['data'] = $this->request_queue_m->get_request($fields);
 			}
 			else
 			{
-				$this->response['data'] = $this->request_queue_m->select_row();
+				$this->response['data'] = $this->request_queue_m->get_request();
 			}
 		}
 		else
 		{
 			if (count($fields) > 0)
 			{
-				$this->response['data'] = $this->request_queue_m->select(['*'], $fields);
+				$this->response['data'] = $this->request_queue_m->get_all_request($fields);
 			}
 			else
 			{
-				$this->response['data'] = $this->request_queue_m->select();
+				$this->response['data'] = $this->request_queue_m->get_all_request();
 			}
 		}
 

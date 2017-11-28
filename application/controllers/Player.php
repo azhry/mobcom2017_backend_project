@@ -42,6 +42,6 @@ class Player extends MY_Controller
 			$this->data['playlist']['currently_playing'] = false;
 		}
 
-		echo json_encode($this->data['playlist']);	
+		echo json_encode($this->data['playlist']);
 	}
 }
