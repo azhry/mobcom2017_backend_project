@@ -14,6 +14,22 @@ class Player extends MY_Controller
 		$this->template($this->data);
 	}
 
+	public function get_currently_playing()
+	{
+		$this->response['error'] 			= false;
+		$this->response['error_message'] 	= '';
+		$this->response['data']				= [];
+
+		$currently_playing = $this->session->userdata('currently_playing');
+		if (isset($currently_playing))
+		{
+			$this->load->model('musics_m');
+			$this->response['data'] = $this->musics_m->get_music(['musics_id' => $currently_playing]);	
+		}
+
+		echo json_encode($this->response);
+	}
+
 	public function refresh()
 	{
 		$this->load->model('request_queue_m');
