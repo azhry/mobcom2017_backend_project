@@ -9,11 +9,11 @@ class Votes_m extends MY_Model
 		$this->data['primary_key']	= 'vote_id';
 	}
 
-	public function count_vote($request_id, $type)
+	public function count_vote($musics_id, $type)
 	{
 		$this->db->select('COUNT(type) AS total_vote');
 		$this->db->from($this->data['table_name']);
-		$this->db->where(['request_id' => $request_id, 'type' => $type]);
+		$this->db->where(['musics_id' => $musics_id, 'type' => $type]);
 		$query = $this->db->get();
 		$result = $query->row();
 
