@@ -68,6 +68,24 @@ class Musics extends MY_Controller
 			{
 				$this->response['data'] = $this->musics_m->get_music();
 			}
+
+			if (isset($device_id, $this->response['data']))
+			{
+				$this->load->model('votes_m');
+				$this->response['data']->total_votes = $this->votes_m->count_vote($this->response['data']->musics_id, '1') - $this->votes_m->count_vote($this->response['data']->musics_id, '0');
+				$vote = $this->votes_m->get_row([
+					'musics_id'	=> $this->response['data']->musics_id,
+					'device_id'	=> $device_id
+				]);
+				if ($vote)
+				{
+					$this->response['data']->type = $vote->type;
+				}
+				else
+				{
+					$this->response['data']->type = null;
+				}
+			}
 		}
 		else
 		{
@@ -79,25 +97,25 @@ class Musics extends MY_Controller
 			{
 				$this->response['data'] = $this->musics_m->get_all_musics();
 			}
-		}
 
-		if (isset($device_id))
-		{
-			$this->load->model('votes_m');
-			for ($i = 0; $i < count($this->response['data']); $i++)
+			if (isset($device_id))
 			{
-				$this->response['data'][$i]->total_votes = $this->votes_m->count_vote($this->response['data'][$i]->musics_id, '1') - $this->votes_m->count_vote($this->response['data'][$i]->musics_id, '0');
-				$vote = $this->votes_m->get_row([
-					'musics_id'	=> $this->response['data'][$i]->musics_id,
-					'device_id'	=> $device_id
-				]);
-				if ($vote)
+				$this->load->model('votes_m');
+				for ($i = 0; $i < count($this->response['data']); $i++)
 				{
-					$this->response['data'][$i]->type = $vote->type;
-				}
-				else
-				{
-					$this->response['data'][$i]->type = null;
+					$this->response['data'][$i]->total_votes = $this->votes_m->count_vote($this->response['data'][$i]->musics_id, '1') - $this->votes_m->count_vote($this->response['data'][$i]->musics_id, '0');
+					$vote = $this->votes_m->get_row([
+						'musics_id'	=> $this->response['data'][$i]->musics_id,
+						'device_id'	=> $device_id
+					]);
+					if ($vote)
+					{
+						$this->response['data'][$i]->type = $vote->type;
+					}
+					else
+					{
+						$this->response['data'][$i]->type = null;
+					}
 				}
 			}
 		}
