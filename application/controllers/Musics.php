@@ -52,8 +52,10 @@ class Musics extends MY_Controller
 	public function get_musics()
 	{
 		$type = $this->GET('type', true);
+		$device_id = $this->GET('device_id', true);
 		$query_string = $_GET;
 		unset($query_string['type']);
+		unset($query_string['device_id']);
 		$fields = $query_string;
 
 		if (isset($type) && $type == 'one')
@@ -66,6 +68,24 @@ class Musics extends MY_Controller
 			{
 				$this->response['data'] = $this->musics_m->get_music();
 			}
+
+			if (isset($device_id, $this->response['data']))
+			{
+				$this->load->model('votes_m');
+				$this->response['data']->total_votes = $this->votes_m->count_vote($this->response['data']->musics_id, '1') - $this->votes_m->count_vote($this->response['data']->musics_id, '0');
+				$vote = $this->votes_m->get_row([
+					'musics_id'	=> $this->response['data']->musics_id,
+					'device_id'	=> $device_id
+				]);
+				if ($vote)
+				{
+					$this->response['data']->type = $vote->type;
+				}
+				else
+				{
+					$this->response['data']->type = null;
+				}
+			}
 		}
 		else
 		{
@@ -76,6 +96,27 @@ class Musics extends MY_Controller
 			else
 			{
 				$this->response['data'] = $this->musics_m->get_all_musics();
+			}
+
+			if (isset($device_id))
+			{
+				$this->load->model('votes_m');
+				for ($i = 0; $i < count($this->response['data']); $i++)
+				{
+					$this->response['data'][$i]->total_votes = $this->votes_m->count_vote($this->response['data'][$i]->musics_id, '1') - $this->votes_m->count_vote($this->response['data'][$i]->musics_id, '0');
+					$vote = $this->votes_m->get_row([
+						'musics_id'	=> $this->response['data'][$i]->musics_id,
+						'device_id'	=> $device_id
+					]);
+					if ($vote)
+					{
+						$this->response['data'][$i]->type = $vote->type;
+					}
+					else
+					{
+						$this->response['data'][$i]->type = null;
+					}
+				}
 			}
 		}
 
