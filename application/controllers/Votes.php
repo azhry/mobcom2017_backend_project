@@ -7,6 +7,7 @@ class Votes extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('musics_m');
 		$this->load->model('votes_m');
 		$this->response['error'] = false;
 		$this->response['error_message'] = '';
@@ -67,6 +68,32 @@ class Votes extends MY_Controller
 		echo json_encode($this->response);
 	}
 
+	public function count_all_votes(){
+		$all_musics = $this->musics_m->get_all_musics();
+
+		if(!isset($all_musics)){
+			$this->response['error']			= true;
+			$this->response['error_message']	= 'Error retrieving musics data';
+			echo json_encode($this->response);
+			return;
+		}
+
+		$result = [];
+		foreach ($all_musics as $musics) {
+			$musics_id = $musics->musics_id;
+
+			$result[] = [
+				'musics_id'	=> $musics_id,
+				'upvote' 	=> $this->votes_m->count_vote($musics_id, '1'),
+				'downvote' 	=> $this->votes_m->count_vote($musics_id, '0')
+			];
+		}
+
+		$this->response['data'] = $result;
+
+		echo json_encode($this->response);
+	}
+
 	public function count_votes()
 	{
 		$musics_id = $this->POST('musics_id');
@@ -81,6 +108,20 @@ class Votes extends MY_Controller
 		{
 			$this->response['error']			= true;
 			$this->response['error_message']	= 'Missing required parameters [musics_id]';
+		}
+
+		echo json_encode($this->response);
+	}
+
+	public function check_all_votes()
+	{
+		$device_id = $this->POST('device_id');
+
+		if (isset($device_id))
+		{
+			$this->response['data'] = $this->votes_m->get([
+				'device_id'	=> $device_id
+			]);
 		}
 
 		echo json_encode($this->response);

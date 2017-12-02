@@ -9,6 +9,15 @@ class Votes_m extends MY_Model
 		$this->data['primary_key']	= 'vote_id';
 	}
 
+	public function count_votes($musics_id_arr, $type){
+		
+		$result = [];
+		foreach ($musics_id_arr as $musics_id) {
+			$result['musics_id'] = count_vote($musics_id, $type);	
+		}	
+		return $result;
+	}
+
 	public function count_vote($musics_id, $type)
 	{
 		$this->db->select('COUNT(type) AS total_vote');
