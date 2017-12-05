@@ -54,7 +54,7 @@ class Request_queue_m extends MY_Model
 		$this->db->select('*');
 		$this->db->from($this->data['table_name']);
 		$this->db->join('musics', $this->data['table_name'] . '.musics_id = musics.musics_id');
-		$this->db->order_by($this->data['table_name'] . '.created_at', 'DESC');
+		// $this->db->order_by($this->data['table_name'] . '.created_at', 'DESC');
 		$query = $this->db->get();
 
 		$ID3 = new getID3();

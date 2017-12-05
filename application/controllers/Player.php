@@ -36,7 +36,7 @@ class Player extends MY_Controller
 	public function refresh()
 	{
 		$this->load->model('request_queue_m');
-		$this->data['playlist'] = $this->request_queue_m->get_by_order('request_id', 'DESC', ['played' => '0']);
+		$this->data['playlist'] = $this->request_queue_m->get(['played' => '0']);
 		$this->data['playlist']['request_available'] = false;
 
 		if (count($this->data['playlist']) > 1)
@@ -45,10 +45,10 @@ class Player extends MY_Controller
 			$this->data['playlist']['currently_playing'] = $this->POST('currently_playing');
 			if ($this->data['playlist']['currently_playing'] != $this->data['playlist'][0]->musics_id)
 			{
-				file_put_contents(FCPATH . '/now_playing.txt', json_encode([
-					'currently_playing'	=> $this->data['playlist'][0]->musics_id,
-					'request_id'		=> $this->data['playlist'][0]->request_id
-				]));
+				// file_put_contents(FCPATH . '/now_playing.txt', json_encode([
+				// 	'currently_playing'	=> $this->data['playlist'][0]->musics_id,
+				// 	'request_id'		=> $this->data['playlist'][0]->request_id
+				// ]));
 				$this->session->set_userdata('currently_playing', $this->data['playlist'][0]->musics_id);
 				$this->data['playlist']['currently_playing'] = $this->data['playlist'][0]->musics_id;
 				$this->load->model('musics_m');
@@ -57,6 +57,10 @@ class Player extends MY_Controller
 			}
 			else
 			{
+				file_put_contents(FCPATH . '/now_playing.txt', json_encode([
+					'currently_playing'	=> $this->data['playlist'][0]->musics_id,
+					'request_id'		=> $this->data['playlist'][0]->request_id
+				]));
 				$this->request_queue_m->update($this->data['playlist'][0]->request_id, ['played' => '1']);
 			}
 		}
