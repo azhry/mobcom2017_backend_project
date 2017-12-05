@@ -36,7 +36,7 @@ class Player extends MY_Controller
 	public function refresh()
 	{
 		$this->load->model('request_queue_m');
-		$this->data['playlist'] = $this->request_queue_m->get(['played' => '0']);
+		$this->data['playlist'] = $this->request_queue_m->get_by_order('request_id', 'DESC', ['played' => '0']);
 		$this->data['playlist']['request_available'] = false;
 
 		if (count($this->data['playlist']) > 1)
