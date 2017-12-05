@@ -38,6 +38,7 @@ class Player extends MY_Controller
 		$this->load->model('request_queue_m');
 		$this->data['playlist'] = $this->request_queue_m->get(['played' => '0']);
 		$this->data['playlist']['request_available'] = false;
+		$this->data['playlist']['is_ended'] = $this->POST('is_ended');
 
 		if (count($this->data['playlist']) > 1)
 		{
@@ -66,10 +67,14 @@ class Player extends MY_Controller
 		}
 		else
 		{
-			file_put_contents(FCPATH . '/now_playing.txt', json_encode([
-				'currently_playing'	=> false,
-				'request_id'		=> false
-			]));
+			if ($this->data['playlist']['is_ended'] == true)
+			{
+				file_put_contents(FCPATH . '/now_playing.txt', json_encode([
+					'currently_playing'	=> false,
+					'request_id'		=> false
+				]));
+			}
+			
 			$this->data['playlist']['currently_playing'] = false;
 		}
 

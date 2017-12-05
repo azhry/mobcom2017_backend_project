@@ -8,12 +8,14 @@
 		var audio = document.getElementById('audio');
 		
 		setInterval(function() {
+			var is_ended = audio.ended;
 			if (audio.ended) {
 				$.ajax({
 					url: '<?= base_url('player/refresh') ?>',
 					type: 'POST',
 					data: {
-						currently_playing: currently_playing
+						currently_playing: currently_playing,
+						is_ended: is_ended
 					},
 					success: function(response) {
 						var json = $.parseJSON(response);
@@ -32,7 +34,8 @@
 					url: '<?= base_url('player/refresh') ?>',
 					type: 'POST',
 					data: {
-						currently_playing: currently_playing
+						currently_playing: currently_playing,
+						is_ended: is_ended
 					},
 					success: function(response) {
 						var json = $.parseJSON(response);
